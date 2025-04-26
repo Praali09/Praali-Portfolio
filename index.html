@@ -1,101 +1,641 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Praali Kumre | AI/ML Portfolio</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Praali Kumre | Portfolio</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #1e293b 0%, #f1f5f9 100%);
+      min-height: 100vh;
+      color: #1e293b;
+      overflow-x: hidden;
+    }
+    #home {
+      display: block;
+    }
+    .section-content {
+      display: none;
+      padding: 4rem 0;
+      min-height: 100vh;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .section-content.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .nav-link {
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav-link:hover {
+      color: #3b82f6;
+    }
+    .nav-link.active {
+      color: #3b82f6;
+      font-weight: 600;
+    }
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #3b82f6;
+    }
+    .explore-btn {
+      background: #3b82f6;
+      color: white;
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .explore-btn:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+    }
+    .download-btn {
+      border: 2px solid #3b82f6;
+      color: #3b82f6;
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
+      transition: background 0.3s, color 0.3s, transform 0.2s;
+    }
+    .download-btn:hover {
+      background: #3b82f6;
+      color: white;
+      transform: translateY(-2px);
+    }
+    .project-card, .cert-card, .extra-card {
+      border: 1px solid #364563;
+      transition: transform 0.3s, box-shadow 0.3s;
+      background: transparent;
+      position: relative;
+      overflow: hidden;
+      opacity: 0; /* For scroll-reveal animation */
+    }
+    .project-card:hover, .cert-card:hover, .extra-card:hover {
+      transform: scale(1.05); /* Enhanced hover scale */
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+    .project-card img, .cert-card img, .extra-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      background: transparent;
+    }
+    .project-card .title {
+      cursor: pointer;
+      padding: 0.5rem;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1e293b;
+      background: rgba(255, 255, 255, 0.8);
+      transition: background 0.3s;
+    }
+    .project-card .title:hover {
+      background: rgba(255, 255, 255, 1);
+    }
+    .project-details {
+      display: none;
+      padding: 1rem;
+      background: rgba(64, 80, 111, 0.9); /* Matches bg-gray-100 */
+      color: #1e293b;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .project-details.active {
+      display: block;
+    }
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    footer {
+      background: #1e293b;
+      color: #d1d5db;
+    }
+    footer a:hover {
+      color: #3b82f6;
+    }
+    .contact-form input, .contact-form textarea {
+      transition: border-color 0.3s;
+    }
+    .contact-form input:focus, .contact-form textarea:focus {
+      border-color: #3b82f6;
+    }
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+      }
+      50% {
+        transform: scale(1.02);
+        box-shadow: 0 0 0 20px rgba(59, 130, 246, 0);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+      }
+    }
+    .section-content.active .project-card,
+    .section-content.active .cert-card,
+    .section-content.active .extra-card {
+      animation: fadeIn 0.8s ease forwards;
+    }
+    .project-card.reveal,
+    .cert-card.reveal,
+    .extra-card.reveal {
+      animation: slideUp 0.6s ease forwards;
+    }
+    .profile-photo {
+      animation: pulse 2s infinite ease-in-out;
+    }
+  </style>
 </head>
-<body>
-  <header class="hero">
-    <img src="praali.jpg" alt="Praali Kumre" class="profile-pic" />
-    <div>
-      <h1>Praali Kumre</h1>
-      <p>AI/ML Enthusiast | IoT Innovator | CSE AIML Student at VIIT Pune</p>
-      <p class="location">Pune, Maharashtra</p>
+<body class="scroll-smooth">
+
+  <!-- Header -->
+  <header class="p-4 fixed w-full z-10">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center">
+        <img src="image/PraaliK.jpg" alt="Praali Kumre" class="w-12 h-12 rounded-full object-cover mr-3" onerror="this.src='https://via.placeholder.com/48';">
+        <h1 class="text-2xl font-bold text-gray-800">Praali Kumre</h1>
+      </div>
+      <nav class="space-x-6 text-base">
+        <a href="#home" class="nav-link text-gray-800" data-section="home">Home</a>
+        <a href="#about" class="nav-link text-gray-800" data-section="about">About</a>
+        <a href="#education" class="nav-link text-gray-800" data-section="education">Education</a>
+        <a href="#projects" class="nav-link text-gray-800" data-section="projects">Projects</a>
+        <a href="#skills" class="nav-link text-gray-800" data-section="skills">Skills</a>
+        <a href="#certifications" class="nav-link text-gray-800" data-section="certifications">Certifications</a>
+        <a href="#extracurriculars" class="nav-link text-gray-800" data-section="extracurriculars">Extracurriculars</a>
+        <a href="#contact" class="nav-link text-gray-800" data-section="contact">Contact</a>
+      </nav>
     </div>
   </header>
 
-  <main>
-    <section>
-      <h2>About Me</h2>
-      <p>I am a third-year Computer Science student (AI/ML) at VIIT Pune, deeply passionate about building intelligent systems that improve lives. I specialize in AI, ML, and full-stack development, with a growing portfolio in IoT and healthcare innovation. I enjoy coding, leading projects, and balancing life with Kabaddi, dancing, and cooking!</p>
+  <!-- Hero Section -->
+  <section id="home" class="h-screen flex flex-col md:flex-row justify-between items-center text-center pt-20 px-6 md:px-20">
+    <div class="flex-1 flex justify-center items-center">
+      <img src="image/PraaliK.jpg" alt="Praali Kumre" class="w-96 h-96 rounded-full object-cover mb-6 profile-photo" onerror="this.src='https://via.placeholder.com/384';">
+    </div>
+    <div class="flex-1 flex flex-col justify-center items-center text-center">
+      <h2 class="text-5xl font-bold text-gray-800">Hi, I'm Praali</h2>
+      <h3 class="text-2xl text-gray-600 mt-2"><span id="typed"></span></h3>
+      <div class="mt-6 space-x-4">
+        <a href="#about" class="explore-btn" data-section="about">Explore More</a>
+        <a href="resume.pdf" download class="download-btn">Download Resume</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dynamic Sections -->
+  <div id="dynamic-sections" class="container mx-auto px-6 md:px-20">
+    <!-- About Section -->
+    <section id="about-section" class="section-content bg-white/90 shadow-lg rounded-lg">
+      <h2 class="text-4xl font-bold text-gray-800 mb-6 text-center pt-8">About Me</h2>
+      <div class="text-lg leading-relaxed text-gray-700 max-w-3xl mx-auto text-center space-y-4">
+        <p>I'm a final-year B.Tech student in Computer Science (AI/ML) at VIIT Pune, passionate about crafting intelligent, user-centric software solutions.</p>
+        <p>My expertise spans Machine Learning,Artificial Intelligence,Web Development, and Voice-activated interfaces, with hands-on experience in diverse projects.</p>
+        <p>I’ve held leadership roles including Camp Incharge at NSS VIIT, Department Head at Sports Council, VIIT Brand Ambassador of my Bharat portal at NSS VIIT, and Culture Team Member at NSS VIIT.</p>
+        <p>Beyond tech, I'm a State-level intercollege Kabaddi player, having clinched titles at Zest, STM Mumbai, and Zeal Kabaddi League.</p>
+        <p>My goal is to leverage technology and leadership to solve real-world challenges with impactful solutions.</p>
+      </div>
+      <div class="mt-8 text-center">
+        <a href="#home" class="nav-link text-blue-600 underline flex items-center justify-center" data-section="home">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Back to Home
+        </a>
+      </div>
     </section>
 
-    <section>
-      <h2>Skills</h2>
-      <ul>
-        <li><strong>Programming:</strong> Python,c , C++, Java, HTML, CSS, JavaScript</li>
-        <li><strong>AI/ML:</strong> Scikit-learn, TensorFlow, Logistic Regression, Random Forest</li>
-        <li><strong>Tools:</strong> Jupyter Notebook, Google Colab, Tableau, Power BI, Streamlit</li>
-        <li><strong>Databases:</strong> SQL, MySQL, MongoDB</li>
-        <li><strong>Soft Skills:</strong> Leadership, Time Management, Communication</li>
-        
-      </ul>
+    <!-- Education Section -->
+    <section id="education-section" class="section-content bg-white/90 shadow-lg rounded-lg">
+      <h2 class="text-4xl font-bold text-gray-800 mb-6 text-center pt-8">Education</h2>
+      <div class="text-lg leading-relaxed text-gray-700 max-w-3xl mx-auto text-center space-y-4">
+        <div class="flex items-start">
+          <span class="text-blue-600 mr-2">•</span>
+          <div class="text-left">
+            <p class="font-semibold">BRACT’s Vishwakarma Institute of Information Technology, Pune</p>
+            <p>B.Tech in Computer Science (AI/ML)</p>
+            <p>CGPA: 7.86</p>
+          </div>
+        </div>
+        <div class="flex items-start">
+          <span class="text-blue-600 mr-2">•</span>
+          <div class="text-left">
+            <p class="font-semibold">Vidya Vihar Jr. College, Chandrapur</p>
+            <p>HSC - Science</p>
+            <p>Percentage: 79.17%</p>
+          </div>
+        </div>
+        <div class="flex items-start">
+          <span class="text-blue-600 mr-2">•</span>
+          <div class="text-left">
+            <p class="font-semibold">Vidya Vihar Jr. College, Chandrapur</p>
+            <p>SSC</p>
+            <p>Percentage: 79.40%</p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-8 text-center">
+        <a href="#home" class="nav-link text-blue-600 underline flex items-center justify-center" data-section="home">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Back to Home
+        </a>
+      </div>
     </section>
 
-    <section>
-      <h2>Projects</h2>
-      <ul>
-        <li><strong>Crop Recommendation and Price Prediction </strong> ML model with Streamlit to predict crops and prices based on environmental data. <em>(Python, TensorFlow)</em></li>
-
-        <li><strong>Fraud Detection: A Hybrid Approach With Logistic Regression, Decision Tree, and Random Forest(Research Paper):</strong> Explored model stacking for improved accuracy using Python.</li><a href="https://assets.cureusjournals.com/artifacts/upload/original_article/pdf/2350/20250210-51856-i1wd7x.pdf" target="_blank">Research_Paper</a></>
-        <li><strong>Route Planner in Java:</strong> Shortest path prediction using Dijkstra's Algorithm and graphs.</li>
-        <li><strong>Recipe Management System (Tkinter):</strong> GUI for managing cooking recipes easily.</li>
-       
-      </ul>
+    <!-- Projects Section -->
+    <section id="projects-section" class="section-content bg-gray-100 rounded-lg">
+      <h2 class="text-4xl font-bold text-gray-800 mb-6 text-center pt-8">Featured Projects</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="project-card rounded-lg shadow-md">
+          <img src="image/crop.jpg" alt="Crop Prediction" class="w-full h-200 object-cover" onerror="this.src='https://via.placeholder.com/300x200?text=Crop+Prediction';">
+          <div class="title" onclick="toggleDetails(this)">Crop Recommendation and Price Prediction</div>
+          <div class="project-details">
+            <p><strong>Tools:</strong> Streamlit, Scikit-learn</p>
+            <p><strong>Languages:</strong> Python</p>
+            <p><strong>Description:</strong> ML model to predict crops and prices based on environmental data using Streamlit. Uses Logistic Regression, Decision Tree, and Random Forest.</p>
+          </div>
+        </div>
+        <div class="project-card rounded-lg shadow-md">
+          <img src="image\voice.jpg" alt="Voice Calculator" class="w-full h-200 object-cover" onerror="this.src='https://via.placeholder.com/300x200?text=Voice+Calculator';">
+          <div class="title" onclick="toggleDetails(this)">Scientific Calculator Using Voice Commands</div>
+          <div class="project-details">
+            <p><strong>Tools:</strong> Tkinter</p>
+            <p><strong>Languages:</strong> Python</p>
+            <p><strong>Description:</strong> Voice-activated calculator using Python and Tkinter for performing scientific calculations.</p>
+          </div>
+        </div>
+        <div class="project-card rounded-lg shadow-md">
+          <img src="image\route.jpg" alt="Route Planner" class="w-full h-200 object-cover" onerror="this.src='https://via.placeholder.com/300x200?text=Route+Planner';">
+          <div class="title" onclick="toggleDetails(this)">Route Planner in Java</div>
+          <div class="project-details">
+            <p><strong>Tools:</strong> Java Swing</p>
+            <p><strong>Languages:</strong> Java</p>
+            <p><strong>Description:</strong> Shortest path prediction using Dijkstra’s Algorithm and graphs.</p>
+          </div>
+        </div>
+        <div class="project-card rounded-lg shadow-md">
+          <img src="image\recipe.jpg" alt="Recipe Management" class="w-full h-200 object-cover" onerror="this.src='https://via.placeholder.com/300x200?text=Recipe+Management';">
+          <div class="title" onclick="toggleDetails(this)">Recipe Management System</div>
+          <div class="project-details">
+            <p><strong>Tools:</strong> Tkinter</p>
+            <p><strong>Languages:</strong> Python</p>
+            <p><strong>Description:</strong> Tkinter GUI for managing cooking recipes easily.</p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-8 text-center">
+        <a href="#home" class="nav-link text-blue-600 underline flex items-center justify-center" data-section="home">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Back to Home
+        </a>
+      </div>
     </section>
 
-    <section>
-      <h2>Certifications</h2>
-      <ul>
-        <li>IBM AI Engineering – Coursera</li>
-        <li>IBM DevOps and Software Engineering – Coursera</li>
-        <li>AI using Python – Infosys Springboard</li>
-        <li>Python for Machine Learning – Great Learning</li>
-        <li>Comprehensive C++ – Infosys Springboard</li>
-        <li>DSA with Java – Infosys Springboard</li>
-        <li>Introduction to AI – LinkedIn </li>
-        <li>Introduction to Packet tracer – Cisco Networing Acadmey </li>
-        <li>Machine Learning -Linear Regression – LEAPS </li>
-        <li>Develop Soft Skills that Industry Demands – TCS </li>
-      </ul>
-    </section>
-    
-    <section>
-        <h2>Position of Responsibility</h2>
-        <ul>
-            <li>Camp Incharge at NSS VIIT</li>
-            <li>Department Head at Sports Council , VIIT</li>
-            <li>Brand Ambassador of my bharat portal at NSS VIIT </li>
-            <li>Culture TeamMember at NSS VIIT</li>
-        </ul>
+    <!-- Skills Section -->
+    <section id="skills-section" class="section-content bg-white/90 shadow-lg rounded-lg">
+      <h2 class="text-4xl font-bold text-gray-800 mb-6 text-center pt-8">Skills</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-lg text-gray-700 max-w-3xl mx-auto">
+        <div class="flex items-center"><span class="text-blue-600 mr-2">•</span> Languages: Python, C++, Java, HTML, CSS, JavaScript</div>
+        <div class="flex items-center"><span class="text-blue-600 mr-2">•</span> ML/AI: Scikit-learn, TensorFlow, Logistic Regression, Random Forest</div>
+        <div class="flex items-center"><span class="text-blue-600 mr-2">•</span> Databases: MySQL, MongoDB, Tableau, Power BI, Streamlit</div>
+        <div class="flex items-center"><span class="text-blue-600 mr-2">•</span> Soft Skills: Leadership, Time Management, Communication</div>
+      </div>
+      <div class="mt-8 text-center">
+        <a href="#home" class="nav-link text-blue-600 underline flex items-center justify-center" data-section="home">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Back to Home
+        </a>
+      </div>
     </section>
 
-    <section>
-      <h2>Awards & Extracurriculars</h2>
-      <ul>
-        <li>Zest 2023 & 2024 Winner – Kabaddi (COEP)</li>
-        <li>STM Mumbai 2024 Winner – Kabaddi (ICT)</li>
-        <li>Zeal Kabaddi League 2024 Winner</li>
-        <li>Satej 2023 – 1st Runner Up Kabaddi (DY Patil)</li>
-        
-      </ul>
+    <!-- Certifications Section -->
+    <section id="certifications-section" class="section-content bg-white/90 shadow-lg rounded-lg">
+      <h2 class="text-4xl font-bold text-gray-800 mb-6 text-center pt-8">Certifications</h2>
+      <div class="text-lg leading-relaxed text-gray-700 max-w-3xl mx-auto text-center space-y-4">
+        <div class="flex items-start">
+          <span class="text-blue-600 mr-2">•</span>
+          <div class="text-left">
+            <p class="font-semibold">IBM AI Engineering</p>
+            <p>Coursera</p>
+          </div>
+        </div>
+        <div class="flex items-start">
+          <span class="text-blue-600 mr-2">•</span>
+          <div class="text-left">
+            <p class="font-semibold">AI with DevOps and Software Engineering</p>
+            <p>Coursera</p>
+          </div>
+        </div>
+        <div class="flex items-start">
+          <span class="text-blue-600 mr-2">•</span>
+          <div class="text-left">
+            <p class="font-semibold">Artificial Intelligence using Python</p>
+            <p>Infosys Springboard</p>
+          </div>
+        </div>
+        <div class="flex items-start">
+          <span class="text-blue-600 mr-2">•</span>
+          <div class="text-left">
+            <p class="font-semibold">Python for Machine Learning</p>
+            <p>Great Learning</p>
+          </div>
+        </div>
+        <div class="flex items-start">
+          <span class="text-blue-600 mr-2">•</span>
+          <div class="text-left">
+            <p class="font-semibold">Comprehensive C++</p>
+            <p>Infosys Springboard</p>
+          </div>
+        </div>
+        <div class="flex items-start">
+          <span class="text-blue-600 mr-2">•</span>
+          <div class="text-left">
+            <p class="font-semibold">DSA with Java</p>
+            <p>Infosys Springboard</p>
+          </div>
+        </div>
+        <div class="flex items-start">
+          <span class="text-blue-600 mr-2">•</span>
+          <div class="text-left">
+            <p class="font-semibold">Introduction to Packet Tracer</p>
+            <p>Cisco Networking Academy</p>
+          </div>
+        </div>
+        <div class="flex items-start">
+          <span class="text-blue-600 mr-2">•</span>
+          <div class="text-left">
+            <p class="font-semibold">Machine Learning - Linear Regression</p>
+            <p>LEAPS</p>
+          </div>
+        </div>
+        <div class="flex items-start">
+          <span class="text-blue-600 mr-2">•</span>
+          <div class="text-left">
+            <p class="font-semibold">Develop Soft Skills that Industry Demands</p>
+            <p>TCS</p>
+          </div>
+        </div>
+        <div class="flex items-start">
+          <span class="text-blue-600 mr-2">•</span>
+          <div class="text-left">
+            <p class="font-semibold">Introduction to AI</p>
+            <p>LinkedIn</p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-8 text-center">
+        <a href="#home" class="nav-link text-blue-600 underline flex items-center justify-center" data-section="home">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Back to Home
+        </a>
+      </div>
     </section>
 
-    <section>
-      <h2>Contact</h2>
-      <p><strong>Email:</strong> <a href="mailto:praalikumre@gmail.com">praalikumre@gmail.com</a></p>
-      <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/praali-kumre-33284a25a" target="_blank">praali-kumre</a></p>
-      <p><strong>GitHub:</strong> <a href="https://github.com/Praali09" target="_blank">Praali09</a></p>
-      
+    <!-- Extracurriculars Section -->
+    <section id="extracurriculars-section" class="section-content bg-white/90 shadow-lg rounded-lg">
+      <h2 class="text-4xl font-bold text-gray-800 mb-6 text-center pt-8">Awards & Extracurriculars</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="extra-card bg-white rounded-lg shadow-md">
+          <img src="image\ceop23.jpg" alt="Zest 2023" class="w-full h-48 object-cover rounded-t-lg" onerror="this.src='https://via.placeholder.com/300x200?text=Zest+2023';">
+          <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-800">Zest 2023 Winner - Kabaddi (COEP)</h3>
+          </div>
+        </div>
+        <div class="extra-card bg-white rounded-lg shadow-md">
+          <img src="image\ceop24.jpg" alt="Zest 2024" class="w-full h-48 object-cover rounded-t-lg" onerror="this.src='https://via.placeholder.com/300x200?text=Zest+2024';">
+          <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-800">Zest 2024 Winner - Kabaddi (COEP)</h3>
+          </div>
+        </div>
+        <div class="extra-card bg-white rounded-lg shadow-md">
+          <img src="image\ceop25.jpg" alt="Zest 2025" class="w-full h-48 object-cover rounded-t-lg" onerror="this.src='https://via.placeholder.com/300x200?text=Zest+2025';">
+          <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-800">Zest 2025 Winner Kabaddi (COEP)</h3>
+          </div>
+        </div>
+        <div class="extra-card bg-white rounded-lg shadow-md">
+          <img src="image\zeal.jpg" alt="Zeal" class="w-full h-48 object-cover rounded-t-lg" onerror="this.src='https://via.placeholder.com/300x200?text=Zeal';">
+          <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-800">Zeal Kabaddi League 2024 Winner</h3>
+          </div>
+        </div>
+        <div class="extra-card bg-white rounded-lg shadow-md">
+          <img src="image\dypatil.jpg" alt="Satje" class="w-full h-48 object-cover rounded-t-lg" onerror="this.src='https://via.placeholder.com/300x200?text=Satje';">
+          <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-800">Satje 2023 - 1st Runner Up Kabaddi (DY Patil)</h3>
+          </div>
+        </div>
+        <div class="extra-card bg-white rounded-lg shadow-md">
+          <img src="image\ict.jpg" alt="STM Mumbai" class="w-full h-48 object-cover rounded-t-lg" onerror="this.src='https://via.placeholder.com/300x200?text=STM+Mumbai';">
+          <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-800">STM Mumbai 2024 Winner - Kabaddi (ICT)</h3>
+          </div>
+        </div>
+      </div>
+      <div class="mt-8 text-center">
+        <a href="#home" class="nav-link text-blue-600 underline flex items-center justify-center" data-section="home">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Back to Home
+        </a>
+      </div>
     </section>
-  </main>
 
-  <footer>
-    <p>© 2025 Praali Kumre | Built with 💻 + ☕</p>
+    <!-- Contact Section -->
+    <section id="contact-section" class="section-content bg-gray-100 rounded-lg">
+      <h2 class="text-4xl font-bold text-gray-800 mb-6 text-center pt-8">Get in Touch</h2>
+      <div class="max-w-lg mx-auto space-y-6">
+        <form id="contact-form" action="mailto:praalikumre@gmail.com" method="post" enctype="text/plain" class="contact-form space-y-4">
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+            <input type="text" id="name" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-md">
+          </div>
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" id="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-md">
+          </div>
+          <div>
+            <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+            <textarea id="message" name="message" required class="w-full px-4 py-2 border border-gray-300 rounded-md min-h-[120px]"></textarea>
+          </div>
+          <button type="submit" class="w-full bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">Send Message</button>
+        </form>
+        <div class="text-center space-y-2">
+          <a href="mailto:praalikumre@gmail.com" class="flex items-center justify-center text-blue-600 hover:underline">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+            </svg>
+            praalikumre@gmail.com
+          </a>
+          <a href="https://linkedin.com/in/praali-kumre" target="_blank" class="flex items-center justify-center text-blue-600 hover:underline">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-1.337-.478-2.246-1.677-2.246-.916 0-1.461.614-1.701 1.207-.087.211-.11.506-.11.802v5.841h-3v-11h3v1.541c.432-.664 1.203-1.541 2.927-1.541 2.141 0 3.761 1.396 3.761 4.396v6.604z"/>
+            </svg>
+            linkedin.com/in/praali-kumre
+          </a>
+          <a href="https://github.com/Praali09" target="_blank" class="flex items-center justify-center text-blue-600 hover:underline">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            github.com/Praali09
+          </a>
+        </div>
+      </div>
+      <div class="mt-8 text-center">
+        <a href="#home" class="nav-link text-blue-600 underline flex items-center justify-center" data-section="home">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Back to Home
+        </a>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-6 text-center">
+    <div class="container mx-auto">
+      <div class="flex justify-center space-x-4 mb-2">
+        <a href="mailto:praalikumre@gmail.com" class="text-gray-300 hover:text-blue-600">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+          </svg>
+        </a>
+        <a href="https://linkedin.com/in/praali-kumre" target="_blank" class="text-gray-300 hover:text-blue-600">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-1.337-.478-2.246-1.677-2.246-.916 0-1.461.614-1.701 1.207-.087.211-.11.506-.11.802v5.841h-3v-11h3v1.541c.432-.664 1.203-1.541 2.927-1.541 2.141 0 3.761 1.396 3.761 4.396v6.604z"/>
+          </svg>
+        </a>
+        <a href="https://github.com/Praali09" target="_blank" class="text-gray-300 hover:text-blue-600">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+        </a>
+      </div>
+      <p class="mt-2">© 2025 Praali Kumre. All rights reserved.</p>
+    </div>
   </footer>
 
-  <script src="script.js"></script>
+  <!-- Scripts -->
+  <script>
+    var typed = new Typed("#typed", {
+      strings: ["AI/ML Developer", "Kabaddi Champion", "Creative Coder 💡", "Web Developer"],
+      typeSpeed: 50,
+      backSpeed: 30,
+      loop: true
+    });
+
+    // Function to update active nav link
+    function setActiveNavLink(section) {
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('data-section') === section) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    // Toggle sections based on nav clicks with smooth scrolling
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const section = link.getAttribute('data-section');
+        const sections = document.querySelectorAll('.section-content');
+        const homeSection = document.getElementById('home');
+
+        setActiveNavLink(section);
+
+        if (section === 'home') {
+          sections.forEach(sec => sec.classList.remove('active'));
+          homeSection.style.display = 'flex';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          homeSection.style.display = 'none';
+          sections.forEach(sec => sec.classList.remove('active'));
+          const targetSection = document.getElementById(`${section}-section`);
+          targetSection.classList.add('active');
+          window.scrollTo({ top: targetSection.offsetTop - 80, behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Handle "Explore More" button to show About section
+    document.querySelector('.explore-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      const sections = document.querySelectorAll('.section-content');
+      const homeSection = document.getElementById('home');
+      homeSection.style.display = 'none';
+      sections.forEach(sec => sec.classList.remove('active'));
+      const aboutSection = document.getElementById('about-section');
+      aboutSection.classList.add('active');
+      setActiveNavLink('about');
+      window.scrollTo({ top: aboutSection.offsetTop - 80, behavior: 'smooth' });
+    });
+
+    // Toggle project details
+    function toggleDetails(element) {
+      const details = element.nextElementSibling;
+      details.classList.toggle('active');
+    }
+
+    // Scroll-reveal animation for project-card, cert-card, and extra-card
+    const revealElements = document.querySelectorAll('.project-card, .cert-card, .extra-card');
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    revealElements.forEach(element => {
+      observer.observe(element);
+    });
+  </script>
 </body>
 </html>
